@@ -14,7 +14,7 @@ class Test(Resource):
 
 @app.route("/", methods=["GET"])
 def Welcome():
-    return "Python API"
+    return "<h1>Welcome to digital image processing API</h1>"
 
 
 api.add_resource(Test, '/test') 
