@@ -1,4 +1,3 @@
-from turtle import home
 from flask import Flask, request
 from flask_restful import Resource, Api
 from json import dumps
@@ -11,12 +10,12 @@ api = Api(app)
 class Test(Resource):
     def get(self):
         return "TEST response"
-class Welcome(Resource):
-    def get(self):
-        return "Python API"
+
+@app.route("/", methods=["GET"])
+def Welcome():
+    return "Python API"
 
 
-api.add_resource(Welcome, '/') 
 api.add_resource(Test, '/test') 
 
 
