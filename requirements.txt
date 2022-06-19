@@ -34,7 +34,7 @@ pytest==4.6.11
 pytz==2022.1
 requests==2.27.1
 scandir==1.10.0
-scipy==1.8.1
+scipy==0.14.0
 six==1.16.0
 snowballstemmer==2.2.0
 Sphinx==1.8.6
