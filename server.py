@@ -1,3 +1,4 @@
+from turtle import home
 from flask import Flask, request
 from flask_restful import Resource, Api
 from sqlalchemy import create_engine
@@ -11,8 +12,13 @@ api = Api(app)
 class Test(Resource):
     def get(self):
         return "tran anh vu du"
+class Welcome(Resource):
+    def get(self):
+        return "Python API"
 
-api.add_resource(Test, '/test') # Route_1 
+
+api.add_resource(Welcome, '/') 
+api.add_resource(Test, '/test') 
 
 
 if __name__ == '__main__':
