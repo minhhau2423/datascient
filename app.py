@@ -124,7 +124,8 @@ def upload():
 
 
 @app.route("/get_all_cells", methods=['GET'])
-def get_cells(image):
+def get_cells():
+    image = request.args.get('image')
     read_img(image)
     sleep(1)
     return json.dumps(return_cells())
