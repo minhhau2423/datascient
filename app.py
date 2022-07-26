@@ -9,17 +9,20 @@ from easyocr import Reader
 from flask import Flask, request
 from flask_restful import Resource, Api
 from json import dumps
-
+from flask import render_template
 app = Flask(__name__)
 api = Api(app)
 # a function to read the
 w = 0
 h = 0
+global_gird = []
 
 
 @app.route("/", methods=['GET'])
 def Welcome():
-    return 'sudoku api'
+    return render_template(
+        "index.html",
+    )
 
 
 def read_img(image):
@@ -102,7 +105,7 @@ def return_cells():
                 rows.append(0)
             else:
                 print(num[0][1], end=' ')
-                rows.append(num[0][1])
+                rows.append(int(num[0][1]))
             k = k+1
             if(k == 9):
                 all.append(rows)
@@ -126,10 +129,69 @@ def upload():
 @app.route("/get_all_cells", methods=['GET'])
 def get_cells():
     image = request.args.get('image')
-    read_img(image)
+    uri = 'upload/'+image
+    read_img(uri)
     sleep(1)
-    return json.dumps(return_cells())
+    gird_not_solve = return_cells()
+    global global_gird
+    global_gird = gird_not_solve
+    return json.dumps({"gird_not_solve": gird_not_solve})
+
+
+@app.route("/solve", methods=['GET'])
+def get_solve():
+    gird = global_gird.copy()
+    if (Suduko(gird, 0, 0)):
+        puzzle(gird)
+    else:
+        print("Solution does not exist")
+    return json.dumps({"gird": gird})
+
+
+M = 9
+
+
+def puzzle(a):
+    for i in range(M):
+        for j in range(M):
+            print(a[i][j], end=" ")
+        print()
+
+
+def solve(grid, row, col, num):
+    for x in range(9):
+        if grid[row][x] == num:
+            return False
+
+    for x in range(9):
+        if grid[x][col] == num:
+            return False
+
+    startRow = row - row % 3
+    startCol = col - col % 3
+    for i in range(3):
+        for j in range(3):
+            if grid[i + startRow][j + startCol] == num:
+                return False
+    return True
+
+
+def Suduko(grid, row, col):
+    if (row == M - 1 and col == M):
+        return True
+    if col == M:
+        row += 1
+        col = 0
+    if grid[row][col] > 0:
+        return Suduko(grid, row, col + 1)
+    for num in range(1, M + 1, 1):
+        if solve(grid, row, col, num):
+            grid[row][col] = num
+            if Suduko(grid, row, col + 1):
+                return True
+        grid[row][col] = 0
+    return False
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)
