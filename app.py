@@ -12,10 +12,12 @@ from json import dumps
 from flask import render_template
 app = Flask(__name__)
 api = Api(app)
-# a function to read the
+
+#global variable
 w = 0
 h = 0
 global_gird = []
+M = 9
 
 
 @app.route("/", methods=['GET'])
@@ -26,29 +28,15 @@ def Welcome():
 
 
 def read_img(image):
-    # I wanted the user to have the liberty to choose the image
-    #print("Enter image name: ")
+    # read image
     image_url = image
-    # image url also conatins the image extension eg. .jpg or .png
-    # reading in greayscale
     img = cv2.imread(image_url)
-    gray = cv2.imread(image_url, cv2.IMREAD_GRAYSCALE)
 
-    # Note that kernel sizes must be positive and odd and the kernel must be square.
-    proc = cv2.GaussianBlur(img.copy(), (9, 9), 0)
-    process = cv2.adaptiveThreshold(
-        gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 57, 5)
-    process = cv2.bitwise_not(process, process)
-
-   # here grid is the cropped image
-    grid_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # VERY IMPORTANT
-    # Adaptive thresholding the cropped grid and inverting it
+    # crop cells
+    grid_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # =>gray image
     grid = cv2.bitwise_not(cv2.adaptiveThreshold(
-        grid_gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 57, 5))
-    # grid = grid_gray
+        grid_gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 57, 5))  # =>thresh image
 
-    # cv2.imshow('d', grid)
-    # cv2.waitKey()
     edge_h = np.shape(grid)[0]
     edge_w = np.shape(grid)[1]
     celledge_h = edge_h // 9
@@ -96,9 +84,8 @@ def return_cells():
             kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 2))
             img2 = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
             img3 = cv2.blur(img2, (3, 3))
-            img3 = img3[0:h, 10:w]
-            # cv2.imshow('cc', img3)
-            # cv2.waitKey(50)
+            img3 = img3[0:h, 10:w]  # scale follow number
+            # read number from image
             num = reader.readtext(img3, allowlist='0123456789')
             if(num == []):
                 print(0, end=' ')
@@ -141,14 +128,11 @@ def get_cells():
 @app.route("/solve", methods=['GET'])
 def get_solve():
     gird = global_gird.copy()
-    if (Suduko(gird, 0, 0)):
+    if (Sudoku(gird, 0, 0)):
         puzzle(gird)
     else:
-        print("Solution does not exist")
+        print("Can not solve!")
     return json.dumps({"gird": gird})
-
-
-M = 9
 
 
 def puzzle(a):
@@ -176,18 +160,18 @@ def solve(grid, row, col, num):
     return True
 
 
-def Suduko(grid, row, col):
+def Sudoku(grid, row, col):
     if (row == M - 1 and col == M):
         return True
     if col == M:
         row += 1
         col = 0
     if grid[row][col] > 0:
-        return Suduko(grid, row, col + 1)
+        return Sudoku(grid, row, col + 1)
     for num in range(1, M + 1, 1):
         if solve(grid, row, col, num):
             grid[row][col] = num
-            if Suduko(grid, row, col + 1):
+            if Sudoku(grid, row, col + 1):
                 return True
         grid[row][col] = 0
     return False

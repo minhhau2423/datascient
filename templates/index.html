@@ -109,7 +109,7 @@
   </head>
   <body>
     <div class="container">
-      <h2>Sudoku solver from a sudoku puzzle image</h2>
+      <h2>Sudoku-solver from a sudoku puzzle image</h2>
       <ul>
         <li><h5>upload an image</h5></li>
         <li><h5>draw sudoku puzzle</h5></li>
@@ -159,34 +159,37 @@
             Draw
           </button>
 
-          <div class="d-flex input-cell">
-            <button type="button" class="cell-btn" onclick="clickNum(1)">
-              1
-            </button>
-            <button type="button" class="cell-btn" onclick="clickNum(2)">
-              2
-            </button>
-            <button type="button" class="cell-btn" onclick="clickNum(3)">
-              3
-            </button>
-            <button type="button" class="cell-btn" onclick="clickNum(4)">
-              4
-            </button>
-            <button type="button" class="cell-btn" onclick="clickNum(5)">
-              5
-            </button>
-            <button type="button" class="cell-btn" onclick="clickNum(6)">
-              6
-            </button>
-            <button type="button" class="cell-btn" onclick="clickNum(7)">
-              7
-            </button>
-            <button type="button" class="cell-btn" onclick="clickNum(8)">
-              8
-            </button>
-            <button type="button" class="cell-btn" onclick="clickNum(9)">
-              9
-            </button>
+          <div class="input-cell">
+            Try solving puzzle!
+            <div class="d-flex">
+              <button type="button" class="cell-btn" onclick="clickNum(1)">
+                1
+              </button>
+              <button type="button" class="cell-btn" onclick="clickNum(2)">
+                2
+              </button>
+              <button type="button" class="cell-btn" onclick="clickNum(3)">
+                3
+              </button>
+              <button type="button" class="cell-btn" onclick="clickNum(4)">
+                4
+              </button>
+              <button type="button" class="cell-btn" onclick="clickNum(5)">
+                5
+              </button>
+              <button type="button" class="cell-btn" onclick="clickNum(6)">
+                6
+              </button>
+              <button type="button" class="cell-btn" onclick="clickNum(7)">
+                7
+              </button>
+              <button type="button" class="cell-btn" onclick="clickNum(8)">
+                8
+              </button>
+              <button type="button" class="cell-btn" onclick="clickNum(9)">
+                9
+              </button>
+            </div>
           </div>
           <button type="button" class="btn btn-primary ml-5" id="btn-solve">
             Solve
@@ -303,7 +306,7 @@
       if (currentId != id) {
         $(`#${currentId}`).css("background-color", "");
       }
-      $(`#${id}`).css("background-color", "green");
+      $(`#${id}`).css("background-color", "#C8F8FF");
       currentId = id;
     }
     function clickNum(num) {
