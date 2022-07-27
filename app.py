@@ -1,13 +1,12 @@
 import datetime
 import json
 import os
-from random import random
 from time import sleep
 import cv2
 import numpy as np
 from easyocr import Reader
 from flask import Flask, request
-from flask_restful import Resource, Api
+from flask_restful import Api
 from json import dumps
 from flask import render_template
 app = Flask(__name__)
@@ -52,11 +51,11 @@ def read_img(image):
             tempgrid.append([rows[k][j - celledge_w:j]
                             for k in range(len(rows))])
 
-        # Creating the 9X9 grid of images
+    #
     finalgrid = []
     for i in range(0, len(tempgrid) - 8, 9):
         finalgrid.append(tempgrid[i:i + 9])
-    # Converting all the cell images to np.array
+    #
     for i in range(9):
         for j in range(9):
             finalgrid[i][j] = np.array(finalgrid[i][j])
@@ -129,13 +128,13 @@ def get_cells():
 def get_solve():
     gird = global_gird.copy()
     if (Sudoku(gird, 0, 0)):
-        puzzle(gird)
+        print_sudoku(gird)
     else:
         print("Can not solve!")
     return json.dumps({"gird": gird})
 
 
-def puzzle(a):
+def print_sudoku(a):
     for i in range(M):
         for j in range(M):
             print(a[i][j], end=" ")
